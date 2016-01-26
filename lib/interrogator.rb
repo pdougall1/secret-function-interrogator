@@ -1,3 +1,5 @@
+require_relative 'evaluator.rb'
+
 module Interrogator
   OPENING_PROMPT = <<DOC
 
@@ -16,19 +18,36 @@ module Interrogator
 
 
 DOC
+
+  ARGUMENT_PROMPT = <<DOC
+
+  Ok cool so we're interrogating this function:
+
+  #{puts @function_string}
+
+  So what integer do you want to use?
+
+
+DOC
+
   class << self
 
     def begin_interrogation
       puts OPENING_PROMPT
       @function_string = gets_code
       puts "\n____________________________________\n"
-      puts "OK THEN, this is what I've got : \n\n#{@function_string}"
+      evaluator # creating here ensures the code is valid, may want to pull that validation out
+      puts ARGUMENT_PROMPT
     end
 
     def gets_code(code = "")
       while code << STDIN.gets
         return code if code["\n\n\n"]
       end
+    end
+
+    def evaluator
+      @evaluator ||= Interrogator::Evaluator.new(@function_string)
     end
   end
 end
