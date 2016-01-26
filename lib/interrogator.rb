@@ -1,3 +1,4 @@
+require 'benchmark'
 require_relative 'evaluator.rb'
 require_relative 'prime_combinations.rb'
 require_relative 'secret_is_additive.rb'
@@ -40,14 +41,17 @@ module Interrogator
     end
 
     def check_secret_for_prime_combos
-      secret_is_additive = Interrogator::SecretIsAdditive.new(evaluator)
       response = nil
-      Interrogator::PrimeCombinations.new(@int).each do |combo|
-        success, response = secret_is_additive.for?(combo)
-        break unless success
+      time = Benchmark.realtime do
+        secret_is_additive = Interrogator::SecretIsAdditive.new(evaluator)
+        Interrogator::PrimeCombinations.new(@int).each do |combo|
+          success, response = secret_is_additive.for?(combo)
+          break unless success
+        end
       end
 
       puts response
+      puts "It took #{time} secondes to find out"
     end
   end
 end
