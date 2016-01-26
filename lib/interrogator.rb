@@ -1,4 +1,6 @@
 require_relative 'evaluator.rb'
+require_relative 'prime_combinations.rb'
+require_relative 'secret_is_additive.rb'
 
 module Interrogator
   OPENING_PROMPT = <<DOC
@@ -41,6 +43,7 @@ DOC
       @int = gets_int
       puts "\n\n  Great you gave us #{@int}!\n  That's a pretty good one!\n"
       puts "\n____________________________________\n"
+      check_secret_for_prime_combos
     end
 
     def gets_code(code = "")
@@ -60,6 +63,17 @@ DOC
 
     def evaluator
       @evaluator ||= Interrogator::Evaluator.new(@function_string)
+    end
+
+    def check_secret_for_prime_combos
+      secret_is_additive = Interrogator::SecretIsAdditive.new(evaluator)
+      response = nil
+      Interrogator::PrimeCombinations.new(@int).each do |combo|
+        success, response = secret_is_additive.for?(combo)
+        break unless success
+      end
+
+      puts response
     end
   end
 end
