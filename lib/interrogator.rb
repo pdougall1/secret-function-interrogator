@@ -1,48 +1,22 @@
 require_relative 'evaluator.rb'
 require_relative 'prime_combinations.rb'
 require_relative 'secret_is_additive.rb'
+require_relative 'console_output.rb'
 
 module Interrogator
-  OPENING_PROMPT = <<DOC
-
-
-  So you've got a secret function hu?
-
-  You can just type it out (or copy and paste) it right in here ;)
-
-  To continue after writing your code just return 3 times :)
-  Might look something like this:
-
-  def secret(int)
-    # some super secret code here
-    return int
-  end
-
-
-DOC
-
-  ARGUMENT_PROMPT = <<DOC
-
-  Ok cool so we're interrogating this function:
-
-  #{puts @function_string}
-
-  So what integer do you want to use?
-
-
-DOC
-
   class << self
+    include Interrogator::ConsoleOutput
 
     def begin_interrogation
-      puts OPENING_PROMPT
+      puts opening_prompt
       @function_string = gets_code
-      puts "\n____________________________________\n"
       evaluator # creating here ensures the code is valid, may want to pull that validation out
-      puts ARGUMENT_PROMPT
+      puts code_confirmation(@function_string)
+      puts "\n  ____________________________________\n"
+      puts argument_prompt
       @int = gets_int
-      puts "\n\n  Great you gave us #{@int}!\n  That's a pretty good one!\n"
-      puts "\n____________________________________\n"
+      puts int_confirmation(@int)
+      puts "\n  ____________________________________\n"
       check_secret_for_prime_combos
     end
 

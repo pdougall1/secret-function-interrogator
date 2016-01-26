@@ -1,12 +1,8 @@
+require_relative 'console_output.rb'
+
 module Interrogator
   class SecretIsAdditive
-    SUCCESS_RESPONSE = <<DOC
-      SUCCESS
-DOC
-
-    FAILED_RESPONSE = <<DOC
-      FAILED
-DOC
+    include Interrogator::ConsoleOutput
 
     def initialize(evaluator)
       @evaluator = evaluator
@@ -14,9 +10,9 @@ DOC
 
     def for?(combo)
       if added_before(*combo) == added_after(*combo)
-        [true, SUCCESS_RESPONSE]
+        [true, success_response]
       else
-        [false, FAILED_RESPONSE]
+        [false, failed_response]
       end
     end
 
