@@ -1,7 +1,10 @@
+require 'benchmark'
 require_relative 'evaluator.rb'
-require_relative 'prime_combinations.rb'
 require_relative 'secret_is_additive.rb'
 require_relative 'console_output.rb'
+require_relative 'prime_combinations.rb'
+require_relative 'prime_combinations_lazy.rb'
+require_relative 'prime_combinations_lazy_dupless.rb'
 
 module Interrogator
   class << self
@@ -40,14 +43,22 @@ module Interrogator
     end
 
     def check_secret_for_prime_combos
-      secret_is_additive = Interrogator::SecretIsAdditive.new(evaluator)
-      response = nil
-      Interrogator::PrimeCombinations.new(@int).each do |combo|
-        success, response = secret_is_additive.for?(combo)
-        break unless success
+      @response = nil
+      Benchmark.bm do |x|
+        x.report('basic')    { check_with(Interrogator::PrimeCombinations) }
+        x.report('lazy')     { check_with(Interrogator::PrimeCombinationsLazy) }
+        x.report('lazy_dup') { check_with(Interrogator::PrimeCombinationsLazyDupless) }
       end
 
-      puts response
+      puts @response
+    end
+
+    def check_with(combinations_factory)
+      secret_is_additive = Interrogator::SecretIsAdditive.new(evaluator)
+      combinations_factory.new(@int).each do |combo|
+        success, @response = secret_is_additive.for?(combo)
+        break unless success
+      end
     end
   end
 end
