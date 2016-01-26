@@ -38,11 +38,23 @@ DOC
       puts "\n____________________________________\n"
       evaluator # creating here ensures the code is valid, may want to pull that validation out
       puts ARGUMENT_PROMPT
+      @int = gets_int
+      puts "\n\n  Great you gave us #{@int}!\n  That's a pretty good one!\n"
+      puts "\n____________________________________\n"
     end
 
     def gets_code(code = "")
       while code << STDIN.gets
         return code if code["\n\n\n"]
+      end
+    end
+
+    def gets_int
+      begin
+        return Integer(gets.chomp)
+      rescue ArgumentError
+        puts "The argument to secret must be an integer.\n\n"
+        gets_int
       end
     end
 
