@@ -12,6 +12,16 @@ This is a small command line program that answers the following critical questio
   2.  cd into it `cd secret-function-interrogator`
   3.  run the program `./interrogator`
   4.  follow the prompts :)
+    - You'll need to provide some code.  It will need to have a method named `secret` that takes an int and returns an int.  Just paste it right into the console when you're prompted to.
+      - Something like this:
+      ```
+      def secret(int)
+        # some code
+        return int
+      end
+      ```
+    - Next you'll need to provide an integer to pass to your method.
+    _ You'll then be told whether or not the function is additive or not.
 
 ### Tests
 
