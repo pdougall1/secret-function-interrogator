@@ -11,6 +11,7 @@ module Interrogator
     include Interrogator::ConsoleOutput
 
     def begin_interrogation
+      @include_benchmark = true if ARGV.include?('--benchmark')
       puts opening_prompt
       @function_string = gets_code
       evaluator # creating here ensures the code is valid, may want to pull that validation out
@@ -31,7 +32,7 @@ module Interrogator
 
     def gets_int
       begin
-        return Integer(gets.chomp)
+        return Integer(STDIN.gets.chomp)
       rescue ArgumentError
         puts "The argument to secret must be an integer.\n\n"
         gets_int
@@ -44,10 +45,14 @@ module Interrogator
 
     def check_secret_for_prime_combos
       @response = nil
-      Benchmark.bm do |x|
-        x.report('basic')    { check_with(Interrogator::PrimeCombinations) }
-        x.report('lazy')     { check_with(Interrogator::PrimeCombinationsLazy) }
-        x.report('lazy_dup') { check_with(Interrogator::PrimeCombinationsLazyDupless) }
+      if @include_benchmark
+        Benchmark.bm do |x|
+          x.report('basic')    { check_with(Interrogator::PrimeCombinations) }
+          x.report('lazy')     { check_with(Interrogator::PrimeCombinationsLazy) }
+          x.report('lazy_dup') { check_with(Interrogator::PrimeCombinationsLazyDupless) }
+        end
+      else
+        check_with(Interrogator::PrimeCombinationsLazyDupless)
       end
 
       puts @response

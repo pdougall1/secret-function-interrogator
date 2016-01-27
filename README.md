@@ -10,7 +10,8 @@ This is a small command line program that answers the following critical questio
 
   1.  clone the repo just like normal
   2.  cd into it `cd secret-function-interrogator`
-  3.  run the program `./interrogator`
+  3.  run the program `./interrogator`; pass in `--benchmark` if you want to see the benchmark status outputted to the console.
+    - To see the benchmarks the algarythm will be run three times, so it might take a little longer.
   4.  follow the prompts :)
     - You'll need to provide some code.  It will need to have a method named `secret` that takes an int and returns an int.  Just paste it right into the console when you're prompted to.
       - Something like this:
